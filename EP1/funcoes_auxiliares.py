@@ -1,5 +1,17 @@
 import numpy as np
 
+def cria_matriz_de_potenciais(Vinterna, a, b, c, d, g, h, precisao):
+
+    m, n = int(precisao * (b*1E2)) + 1, int(precisao * (a*1E2)) + 1     # Dimensões da matriz
+
+    matriz_de_potenciais = np.zeros((m, n))
+
+    for i in range(m - int(h*1E2 + d*1E2) * precisao, m - int(h*1E2) * precisao):
+        for j in range(int(g*1E2) * precisao + 1, int(g*1E2 + c*1E2) * precisao + 1):
+            matriz_de_potenciais[i][j] = Vinterna
+            
+    return matriz_de_potenciais
+
 def calcula_potencial(matriz_de_potenciais, Vinterna):
 
     m, n = matriz_de_potenciais.shape[0], matriz_de_potenciais.shape[1]
@@ -22,15 +34,3 @@ def calcula_potencial(matriz_de_potenciais, Vinterna):
         matriz_de_potenciais[alteracao[0]][alteracao[1]] = alteracao[2]
 
     return matriz_de_potenciais, lista_alteracoes
-
-def cria_matriz_de_potenciais(Vinterna, a, b, c, d, g, h, precisao):
-
-    m, n = int(precisao * (b*1E2)) + 1, int(precisao * (a*1E2)) + 1     # Dimensões da matriz
-
-    matriz_de_potenciais = np.zeros((m, n))
-
-    for i in range(m - int(h*1E2 + d*1E2) * precisao, m - int(h*1E2) * precisao):
-        for j in range(int(g*1E2) * precisao + 1, int(g*1E2 + c*1E2) * precisao + 1):
-            matriz_de_potenciais[i][j] = Vinterna
-            
-    return matriz_de_potenciais

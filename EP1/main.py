@@ -31,3 +31,4 @@ while len(lista_alteracoes) != 0:
     matriz_de_potenciais, lista_alteracoes = calcula_potencial(matriz_de_potenciais, Vinterna)
 
 print(matriz_de_potenciais)
+plotar_mapa(matriz_de_potenciais, Vinterna, a, b, precisao)
