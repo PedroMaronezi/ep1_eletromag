@@ -11,17 +11,13 @@ def calcula_potencial(matriz_de_potenciais):
 
     return matriz_de_potenciais
 
-def cria_matriz_de_potenciais(Vinterna, Vexterna):
-    
-    matriz_de_potenciais = np.zeros((61,111))
+def cria_matriz_de_potenciais(Vinterna, m, n, a, b, c, d, g, h, precisao):
 
-    for i in range(matriz_de_potenciais.shape[0]):
-        for j in range(matriz_de_potenciais.shape[1]):
+    matriz_de_potenciais = np.zeros((m, n))
 
-            if i == 0 or i == matriz_de_potenciais.shape[0] - 1 or j == 0 or j == matriz_de_potenciais.shape[1] - 1:
-                matriz_de_potenciais[i, j] = Vexterna
+    for i in range(m - int(h*1E2 + d*1E2) * precisao, m - int(h*1E2) * precisao):
+        for j in range(int(g*1E2) * precisao + 1, int(g*1E2 + c*1E2) * precisao + 1):
+            matriz_de_potenciais[i][j] = Vinterna
             
-            elif (i == 21 and j > 21 and j < 61) or (i == 51 and j > 21 and j < 61) or (j == 21 and i > 21 and i < 51) or (j == 61 and i > 21 and i < 51):
-                matriz_de_potenciais[i, j] = Vinterna 
 
     return matriz_de_potenciais
