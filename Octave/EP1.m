@@ -13,14 +13,14 @@ Vint = 100;
 Vext = 0;
 
 
-h1 = round(g/delta + 1);
-h2 = round((g+c)/delta + 1);
-h3 = round(a/delta + 1);
-v1 = round((b-h-d)/delta + 1);
-v2 = round((b-h)/delta + 1);
-v3 = round(b/delta + 1);
-M = zeros(v3, h3);
-M_ant = [v3, h3];
+x1 = round(g/delta + 1);
+x2 = round((g+c)/delta + 1);
+x3 = round(a/delta + 1);
+y1 = round((b-h-d)/delta + 1);
+y2 = round((b-h)/delta + 1);
+y3 = round(b/delta + 1);
+M = zeros(y3, x3);
+M_ant = [y3, x3];
 MAX = 0.001;
 numero = 1;
 stop_value = 0.000001*Vint
@@ -31,9 +31,9 @@ stop_value = 0.000001*Vint
 
 %Montando a Matriz com Condicoes Iniciais
 
-for i=v1:v2
-  for j=h1:h2
-    if ((i == v1|| i == v2) || (j == h1 || j == h2))
+for i=y1:y2
+  for j=x1:x2
+    if ((i == y1|| i == y2) || (j == x1 || j == x2))
       M(i,j) = Vext;
     else
       M(i,j) = NaN;
@@ -46,8 +46,8 @@ while(MAX > stop_value)
     MAX = 0;
     fprintf('\n\nIteração N°: %d\n', numero);
     
-    for i = 2:(v1-1)%Cálculo do Potencial acima do Retângulo.
-        for j = 2:(h3-1)
+    for i = 2:(y1-1)%Cálculo do Potencial acima do Retângulo.
+        for j = 2:(x3-1)
             anteior = M(i,j);
             M(i,j) = (M(i-1,j) + M(i+1,j) + M(i,j-1) + M(i,j+1)) / 4;
             if abs((M(i,j)-anteior))>MAX
@@ -57,8 +57,8 @@ while(MAX > stop_value)
         end
     end
     
-    for i = v1:v2  %Cálculo do Potencial à Esquerda do Retângulo.
-        for j = 2:(h1-1)
+    for i = y1:y2  %Cálculo do Potencial à Esquerda do Retângulo.
+        for j = 2:(x1-1)
             anteior = M(i,j);
             M(i,j) = (M(i-1,j) + M(i+1,j) + M(i,j-1) + M(i,j+1)) / 4;
             if abs((M(i,j)-anteior))>MAX
@@ -67,8 +67,8 @@ while(MAX > stop_value)
         end
     end
     
-    for i = v1:v2  %Cálculo do Potencial à Direita do Retângulo.
-        for j = (h2+1):(h3-1)
+    for i = y1:y2  %Cálculo do Potencial à Direita do Retângulo.
+        for j = (x2+1):(x3-1)
             anteior = M(i,j);
             M(i,j) = (M(i-1,j) + M(i+1,j) + M(i,j-1) + M(i,j+1)) / 4;
             if abs((M(i,j)-anteior))>MAX
@@ -77,8 +77,8 @@ while(MAX > stop_value)
         end
     end
     
-    for i = (v2+1):(v3-1)  %Cálculo do Potencial abaixo do Retângulo.
-        for j = 2:(h3-1)
+    for i = (y2+1):(y3-1)  %Cálculo do Potencial abaixo do Retângulo.
+        for j = 2:(x3-1)
             anteior = M(i,j);
             M(i,j) = (M(i-1,j) + M(i+1,j) + M(i,j-1) + M(i,j+1))/ 4;
             if abs((M(i,j)-anteior))>MAX
