@@ -1,17 +1,21 @@
 import numpy as np
 import math
 
-def calcula_potencial(matriz_de_potenciais):
+def calcula_potencial(matriz_de_potenciais, c, d, g, h, precisao):
 
-    for i in range(matriz_de_potenciais.shape[0]):
-        for j in range(matriz_de_potenciais.shape[1]):
-            if i != 0 and i != matriz_de_potenciais.shape[0] - 1 and j != 0 and j != matriz_de_potenciais.shape[1] - 1:
-                if i < 21 or i > 51 or j < 21 or j > 61:
+    m, n = matriz_de_potenciais.shape[0], matriz_de_potenciais.shape[1]
+
+    for i in range(m):
+        for j in range(n):
+            if i != 0 and i != m - 1 and j != 0 and j != n - 1:
+                if i < m - int(h*1E2 + d*1E2) * precisao or i > m - int(h*1E2) * precisao or j < int(g*1E2) * precisao + 1 or j > int(g*1E2 + c*1E2) * precisao + 1:
                     matriz_de_potenciais[i, j] = (matriz_de_potenciais[i-1, j] + matriz_de_potenciais[i+1, j] + matriz_de_potenciais[i, j-1] + matriz_de_potenciais[i, j+1])/4
 
     return matriz_de_potenciais
 
-def cria_matriz_de_potenciais(Vinterna, m, n, a, b, c, d, g, h, precisao):
+def cria_matriz_de_potenciais(Vinterna, a, b, c, d, g, h, precisao):
+
+    m, n = int(precisao*(b*1E2)) + 1, int(precisao*(a*1E2)) + 1     # Dimensões da matriz
 
     matriz_de_potenciais = np.zeros((m, n))
 
