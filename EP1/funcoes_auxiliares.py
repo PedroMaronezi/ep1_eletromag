@@ -36,33 +36,20 @@ def calcula_potencial(matriz_de_potenciais, Vinterna):
 
     return matriz_de_potenciais, lista_alteracoes
 
-'''
-def matrizes_de_campo_eletrico(matriz_de_potenciais, deltaX, deltaY):
+def matrizes_de_campo_eletrico(matriz_de_potenciais, Vinterna, deltaX, deltaY):
     
     m, n = matriz_de_potenciais.shape[0], matriz_de_potenciais.shape[1]     # Dimensões da matriz
 
     matriz_campo_eletrico_x, matriz_campo_eletrico_y = np.zeros((m, n)), np.zeros((m, n))
 
-    for i in range(m):
-        for j in range(n):
-            if matriz_de_potenciais[i][j] != Vinterna:
-                
-                if i == 0 and j == 0:
-                    matriz_campo_eletrico_x = (matriz_de_potenciais[i][j] + matriz_de_potenciais[i][j+1] - matriz_de_potenciais[i+1][j] - matriz_de_potenciais[i+1][j+1])/(2*deltaX)
-                    matriz_campo_eletrico_y = (matriz_de_potenciais[i][j] + matriz_de_potenciais[i+1][j] - matriz_de_potenciais[i][j+1] - matriz_de_potenciais[i+1][j+1])/(2*deltaX)
-                elif i == 0 and j == n:
-                elif i == m and j == 0:
-                elif i == m and j == n:
-
-                elif i == 0 and j != 0 and j != n:
-                elif i == m and j != 0 and j != n:
-                elif j == 0 and i != 0 and i != m:
-                elif j == n and i != 0 and i != m:
-                
-                else:
-                    matriz_campo_eletrico_x[i][j] = (matriz_de_potenciais[i][j] + matriz_de_potenciais[i][j+1] - matriz_de_potenciais[i+1][j] - matriz_de_potenciais[i+1][j+1])/(2*deltaX)
-                    matriz_campo_eletrico_y[i][j] = (matriz_de_potenciais[i][j] + matriz_de_potenciais[i+1][j] - matriz_de_potenciais[i][j+1] - matriz_de_potenciais[i+1][j+1])/(2*deltaX)
-            
+    for i in range(m-1):
+        for j in range(n-1):
+            if not (matriz_de_potenciais[i][j] == matriz_de_potenciais[i][j+1] == matriz_de_potenciais[i+1][j] == matriz_de_potenciais[i+1][j+1] == Vinterna):
+                #falta fazer os limites de borda
+                matriz_campo_eletrico_x[i][j] = (matriz_de_potenciais[i][j] + matriz_de_potenciais[i][j+1] - matriz_de_potenciais[i+1][j] - matriz_de_potenciais[i+1][j+1])/(2*deltaX)
+                matriz_campo_eletrico_y[i][j] = (matriz_de_potenciais[i][j] + matriz_de_potenciais[i+1][j] - matriz_de_potenciais[i][j+1] - matriz_de_potenciais[i+1][j+1])/(2*deltaY)
 
     return matriz_campo_eletrico_x, matriz_campo_eletrico_y 
-'''
+
+#def calcula_resistencia():
+    

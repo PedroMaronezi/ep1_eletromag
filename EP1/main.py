@@ -18,7 +18,7 @@ Vinterna = 100                                               # Potenciais das pl
 
 
 # Define-se o tamanho da matriz de potenciais (quanto maior maior a precisão) e as variáveis que dependem disso
-precisao = 10
+precisao = 1
 
 matriz_de_potenciais = cria_matriz_de_potenciais(Vinterna, a, b, c, d, g, h, precisao)
 m, n = matriz_de_potenciais.shape[0], matriz_de_potenciais.shape[1]
@@ -30,4 +30,11 @@ matriz_de_potenciais, lista_alteracoes = calcula_potencial(matriz_de_potenciais,
 while len(lista_alteracoes) != 0:
     matriz_de_potenciais, lista_alteracoes = calcula_potencial(matriz_de_potenciais, Vinterna)
 
+
+
+matriz_campo_eletrico_x, matriz_campo_eletrico_y = matrizes_de_campo_eletrico(matriz_de_potenciais, Vinterna, deltaX, deltaY)
+
 plotar_mapa(matriz_de_potenciais, Vinterna, a, b, precisao)
+
+
+

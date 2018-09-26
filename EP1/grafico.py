@@ -16,8 +16,7 @@ def plotar_mapa(matriz_de_potenciais, Vinterna, a, b, precisao):
     plt.xlabel('$x * precisao (cm)$')
     plt.ylabel('$y * precisao (cm)$')
 
-    # Plota as curvas de nível (com o mesmo potencial) da matriz com linhas invertidas (porque a função contour inverte
-    # as linhas dela)
+    # Plota as curvas de nível da matriz com linhas invertidas (porque a função contour inverte as linhas dela)
     V = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     plt.contour(matriz_de_potenciais[::-1], V)
 
