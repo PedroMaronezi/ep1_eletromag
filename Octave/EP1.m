@@ -24,10 +24,10 @@ Vext = 0; %Tensão externa (Volts)
 
 %Matriz e seus extremos
 X1 = round(g/div + 1);
-Y1 = round((b - h - d)/div + 1);
+Y1 = round(h/div + 1);
 
 X2 = round((g + c)/div + 1);
-Y2 = round((b - h)/div + 1 );
+Y2 = round((h + d)/div + 1 );
 
 n = round(a/div + 1);
 m = round(b/div + 1);
@@ -103,7 +103,7 @@ for i = Y1:Y2
   end
   
   for j = (X1 + 1):(X2 - 1)
-    if i >= ((Y1 + Y2) / 2) && i < Y2
+    if (i >= ((Y1 + Y2) / 2)) && (i < Y2)
       D(i,j) = NaN;
     end
   end
@@ -116,7 +116,7 @@ for i = Y1:Y2
 end
 
 %Calculo de metade do potencial dual
-for i=1:50
+for i=1:500
     for i = ((Y1 + Y2) / 2) + 1:m
       
       for j = 1:X1
@@ -187,3 +187,5 @@ axis equal
 contour(M, [0 10 20 30 40 50 60 70 80 90 100]);
 hold on
 contour(D, 40);
+
+%Densidade de carga minima
