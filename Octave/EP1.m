@@ -1,33 +1,37 @@
 %Declaraçoes iniciais
 
 %Dimensoes
-a = 11E-2; %metros
-b = 6E-2; %metros
-c = 4E-2; %metros
-d = 3E-2; %metros
-g = 2E-2; %metros
-h = (b-d)/2; %metros
+a = 0.11; %metros
+b = 0.06; %metros
+c = 0.04; %metros
+d = 0.03; %metros
+g = 0.02; %metros
+h = (b - d)/2; %metros
 espessura = 1; %metros
 
-%Constantes
-sigma = 3.2E-2; %Condutancia do meio
-eps = 1.9*8.854E-11; %Permissividade do meio
+div = 0.001; %Divisão da malha
 
-precisao = 0.001; %Divisão da malha
+%Constantes
+sigma1 = 3.2E-3; %Condutancia do meio 1
+sigma2 = 3E-3; %Condutância do meio 2
+eps0 = 8.854E-12; %Permissividade do vácuo
+eps = 1.9 * eps0; %Permissividade do meio
+
 
 %Tensões
 Vint = 100; %Tensão interna (Volts)
 Vext = 0; %Tensão externa (Volts)
 
 %Matriz e seus extremos
-n = round(a/precisao + 1);
-m = round(b/precisao + 1);
+X1 = round(g/div + 1);
+Y1 = round((b - h - d)/div + 1);
 
-linha1 = round((b-d-h)/precisao + 1);
-coluna1 = round((g+c)/precisao + 1);
+X2 = round((g + c)/div + 1);
+Y2 = round((b - h)/div + 1 );
 
-linha2 = round((b-h)/precisao + 1 );
-coluna2 = round(g/precisao + 1);
+n = round(a/div + 1);
+m = round(b/div + 1);
+
 
 M = zeros(m, n); %Matriz Original
 D = zeros(m, n); %Matriz Dual
@@ -45,118 +49,97 @@ densQmin = 0;
 %*********DIFERENÇAS FINITAS********
 
 %Condições Iniciais
-for i = linha1:linha2
-  for j = coluna2:coluna1
-    if (i == linha1 || j == coluna2 || i == linha2 || j == coluna2)
+for i = Y1:Y2
+  for j = X1:X2
+    if (i == Y1 || i == Y2) || (j == X1 || j == X2)
       M(i,j) = Vint;
     else
       M(i,j) = NaN;
      end
-  endfor
-endfor
+  end
+end
 
 %Calculo de Potenciais
-while(maior_erro >= erro)
-  maior_erro = 0;
-  fprintf('\n\nIteração N°: %d\n', iteracao);
+for i=1:500
   
   %Calculo do Potencial no retângulo superior
-  for i = 2:(linha1-1)    
-    for j = 2:(n-1)
-      anterior = M(i,j);
+  for i = (Y2 + 1):(m - 1)    
+    for j = 2:(n - 1)
       M(i,j) = (M(i+1, j) + M(i-1, j) + M(i, j+1) + M(i, j-1)) / 4;
-      if (abs(anterior - M(i,j)) / anterior) > maior_erro
-        maior_erro = abs(anterior - M(i,j);
-      endif
-    endfor
-  endfor
+    end
+  end
   
   %Calculo do potencial no retângulo inferior
-  for i = (linha2 + 1): (m - 1) 
-    for j = 2:(n-1)
-      anterior = M(i,j);
+  for i = 2: (Y1 - 1) 
+    for j = 2:(n - 1)
       M(i,j) = (M(i+1, j) + M(i-1, j) + M(i, j+1) + M(i, j-1)) / 4;
-      if (abs(anterior - M(i,j)) / anterior) > maior_erro
-        maior_erro = abs(anterior - M(i,j);
-      endif
-    endfor
-  endfor
+    end
+  end
   
   %Calculo do potencial no retângulo esquerdo
-  for i = linha1:linha2 
-    for j = 2:(coluna2 - 1)
-      anterior = M(i,j);
+  for i = Y1:Y2 
+    for j = 2:(X1 - 1)
       M(i,j) = (M(i+1, j) + M(i-1, j) + M(i, j+1) + M(i, j-1)) / 4;
-      if (abs(anterior - M(i,j)) / anterior) > maior_erro
-        maior_erro = abs(anterior - M(i,j);
-      endif
-    endfor
-  endfor
+    end
+  end
   
   %Calculo do potencial no retângulo direito
-  for i = linha1:linha2 
-    for j = (linha2 + 1):(n-1)
-      anterior = M(i,j);
+  for i = Y1:Y2 
+    for j = (X2 + 1):(n-1)
       M(i,j) = (M(i+1, j) + M(i-1, j) + M(i, j+1) + M(i, j-1)) / 4;
-      if (abs(anterior - M(i,j)) / anterior) > maior_erro
-        maior_erro = abs(anterior - M(i,j);
-      endif
-    endfor
-  endfor
+    end
+  end
   
-  iteracao = iteracao + 1;
 end
 
 %************MAPA DE QUADRADOS CURVILINEOS **********
 
 %Condições Iniciais
-for i = linha1:linha2
-  for j = 1:coluna2
-    if i == ((linha1 + linha2) / 2)
+for i = Y1:Y2
+  for j = 1:X1
+    if i == ((Y1 + Y2) / 2)
       D(i,j) = Vext;
-    endif
-  endfor
+    end
+  end
   
-  for j = (coluna2 + 1):(coluna1 - 1)
-    if i >= ((linha1 + linha2) / 2) && i < linha2
+  for j = (X1 + 1):(X2 - 1)
+    if i >= ((Y1 + Y2) / 2) && i < Y2
       D(i,j) = NaN;
-    endif
-  endfor
+    end
+  end
   
-  for j = coluna1:n
-    if i == ((linha1 + linha2) / 2)
+  for j = X2:n
+    if i == ((Y1 + Y2) / 2)
       D(i,j) = Vint;
-    endif
-  endfor
-endfor
+    end
+  end
+end
 
 %Calculo de metade do potencial dual
-while(maior_erro_d > erro)
-    maior_erro_d = 0;
-    fprintf('\n\nIteração Dual N°: %d\n', iteracao_d);
-    for i = ((linha1 + linha2) / 2) + 1:m
-      for j = 1:coluna2
+for i=1:50
+    for i = ((Y1 + Y2) / 2) + 1:m
+      
+      for j = 1:X1
         if i ~= m
           if j == 1
             D(i,j) = (D(i-1,j) + D(i+1,j) + 2*D(i,j+1)) / 4;
           else
-            if isnan(D(i,j+1)
+            if isnan(D(i,j+1))
               D(i,j) = (D(i-1,j) + D(i+1,j) + 2*D(i,j-1)) / 4;
             else
               D(i,j) = (D(i-1,j) + D(i+1,j) + D(i,j-1) + D(i,j+1)) / 4;
-            endif
-          endif
-         endif
+            end
+          end
         else
           if j == 1
-            D(i,j) = (2*D(i-1,j) + 2*D(i,j+1))/4;
+            D(i,j) = (2*D(i-1,j) + 2*D(i,j+1)) / 4;
           else
-            D(i,j) = (2*D(i-1,j) + D(i,j-1) + D(i,j+1))/4;
-          endif
-        endif
-      endfor
+            D(i,j) = (2*D(i-1,j) + D(i,j-1) + D(i,j+1)) / 4;
+          end
+        end
+      end
       
-      for j = (coluna2 + 1):(coluna1 - 1)
+      for j = (X1 + 1):(X2 - 1)
         if i == m
           D(i,j) = (2*D(i-1,j) + D(i,j-1) + D(i,j+1)) / 4;
         else
@@ -164,11 +147,11 @@ while(maior_erro_d > erro)
             D(i,j) = (2*D(i+1,j) + D(i,j-1) + D(i,j+1)) / 4;
           else
             D(i,j) = (D(i-1,j) + D(i+1,j) + D(i,j-1) + D(i,j+1)) / 4;
-          endif
-        endif
-      endfor
+          end
+        end
+      end
       
-      for j = coluna1:n
+      for j = X2:n
         if i ~= m
           if j == n
             D(i,j) = (D(i-1,j) + D(i+1,j) + 2*D(i,j-1)) / 4;
@@ -177,24 +160,30 @@ while(maior_erro_d > erro)
               D(i,j) = (D(i-1,j) + D(i+1,j) + 2*D(i,j+1)) / 4;
             else
               D(i,j) = (D(i-1,j) + D(i+1,j) + D(i,j-1) + D(i,j+1)) / 4;
-            endif
-          endif
+            end
+          end
         else
           if j == n
             D(i,j) = (2*D(i-1,j) + 2*D(i,j-1)) / 4;
           else
             D(i,j) = (2*D(i-1,j) + D(i,j-1) + D(i,j+1)) / 4;
-          endif
-        endif
-      endfor
-    endfor
+          end
+        end
+      end
+    end
     
-    iteracao_d = iteracao_d + 1;
 end
 
 %Completando a outra metade da matriz
-for i = 1:((linha1+linha2)/2 - 1)
+for i = 1:(((Y1 + Y2) / 2) - 1)
   for j = 1:n
     D(i,j) = D(m-i+1,j);
-  endfor
-endfor
+  end
+end
+
+%Plotando o mapa de quadrados curvilineos
+figure(1);
+axis equal
+contour(M, [0 10 20 30 40 50 60 70 80 90 100]);
+hold on
+contour(D, 40);
