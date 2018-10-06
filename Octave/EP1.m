@@ -248,16 +248,17 @@ I = soma * espessura * sigma1;
 FluxoCampoEDual = espessura * (D(1+(Y1 + Y2)/2,1)/2 + sum(D(1+(Y1 + Y2)/2,2:X1-1)) + D(1+(Y1 + Y2)/2,X1)/2);
 RLinhaNumerico = Vint/(sigma2*FluxoCampoEDual);
 R = Vint/I
-RLinhaDual = 1/(2*R*sigma1*(espessura.^2)*sigma2)
+RLinhaDual = 2/(R*sigma1*(espessura.^2)*sigma2)
 C = (eps*I)/(sigma1*Vint)
 densQmin
+np = round(10/(R*sigma1*espessura))
 
 %Plotando o mapa de quadrados curvilineos
 figure(1);
 axis equal
 contour(M, [0 10 20 30 40 50 60 70 80 90 100]);
 hold on
-contour(D, 40);
+contour(D, np);
 
 %Resultados de Resistências, Capacitâncias e Densidades
 densQmin
