@@ -1,3 +1,4 @@
+tic
 %Declaraçoes iniciais
 
 %Dimensoes
@@ -24,10 +25,10 @@ Vext = 0; %Tensão externa (Volts)
 
 %Matriz e seus extremos
 X1 = round(g/div + 1);
-Y1 = round(h/div + 1);
+Y1 = round((b - d - h)/div + 1);
 
 X2 = round((g + c)/div + 1);
-Y2 = round((h + d)/div + 1 );
+Y2 = round((b - h)/div + 1 );
 
 n = round(a/div + 1);
 m = round(b/div + 1);
@@ -60,7 +61,7 @@ for i = Y1:Y2
 end
 
 %Calculo de Potenciais
-for i=1:5000
+for numero=1:50000 %Iterações
   
   %Calculo do Potencial no retângulo superior
   for i = (Y2 + 1):(m - 1)    
@@ -116,7 +117,7 @@ for i = Y1:Y2
 end
 
 %Calculo de metade do potencial dual
-for i=1:5000
+for numero=1:50000  %Iterações
     for i = ((Y1 + Y2) / 2) + 1:m
       
       for j = 1:X1
@@ -243,12 +244,13 @@ for i = 2:(m-1)
   soma = soma + M(i,(n-1));
 end
 
-FluxoCampoE = soma * espessura;
+I = soma * espessura * sigma1;
 FluxoCampoEDual = espessura * (D(1+(Y1 + Y2)/2,1)/2 + sum(D(1+(Y1 + Y2)/2,2:X1-1)) + D(1+(Y1 + Y2)/2,X1)/2);
 RLinhaNumerico = Vint/(sigma2*FluxoCampoEDual);
-R = Vint/(sigma1*FluxoCampoE);
-RLinhaDual = 1/(2*R*sigma1*(espessura.^2)*sigma2);
-C = eps*FluxoCampoE/Vint;
+R = Vint/I
+RLinhaDual = 1/(2*R*sigma1*(espessura.^2)*sigma2)
+C = (eps*I)/(sigma1*Vint)
+densQmin
 
 %Plotando o mapa de quadrados curvilineos
 figure(1);
@@ -256,3 +258,10 @@ axis equal
 contour(M, [0 10 20 30 40 50 60 70 80 90 100]);
 hold on
 contour(D, 40);
+
+%Resultados de Resistências, Capacitâncias e Densidades
+densQmin
+R
+C
+RLinhaDual
+toc
